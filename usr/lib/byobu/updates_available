@@ -85,7 +85,9 @@ ___update_needed() {
 	[ ! -e "$mycache" ] && return 0
 	if eval $BYOBU_TEST apt-get >/dev/null; then
 		# Debian/ubuntu
-		[ "/var/lib/apt" -nt "$mycache" ] || [ "/var/lib/apt/lists" -nt "$mycache" ]
+		# This check fails under 16.04 and won't update after an upgrade
+		#[ "/var/lib/apt" -nt "$mycache" ] || [ "/var/lib/apt/lists" -nt "$mycache" ]
+		[ "/var/lib/apt" -nt "$mycache" ] || [ "/var/lib/apt/lists" -nt "$mycache" ] || [ "/var/log/dpkg.log" -nt "$mycache" ]
 		return $?
 	elif [ -e "/var/lib/PackageKit/transactions.db" ]; then
 		[ "/var/lib/PackageKit/transactions.db" -nt "$mycache" ]
